@@ -50,9 +50,9 @@ graph TB
     R_STATS --> N_TRADES & N_ACCOUNTS
     R_UPLOAD --> N_TRADES
 
-    N_TRADES -->|@notionhq/client| DB_TRADES
-    N_ACCOUNTS -->|@notionhq/client| DB_JOURNALS
-    N_INSTRUMENTS -->|@notionhq/client| DB_INSTRUMENTS
+    N_TRADES -->|notion client| DB_TRADES
+    N_ACCOUNTS -->|notion client| DB_JOURNALS
+    N_INSTRUMENTS -->|notion client| DB_INSTRUMENTS
     N_HELPERS -.->|used by| N_TRADES & N_ACCOUNTS & N_INSTRUMENTS
 ```
 
@@ -89,7 +89,7 @@ graph TB
     AUTH -->|"pass"| ROUTES
     BR <-->|"OAuth flow\n/api/auth/google"| OAUTH
     OAUTH -->|"JWT session cookie"| BR
-    ROUTES -->|"@notionhq/client\nNOTION_TOKEN env var"| DBS
+    ROUTES -->|"notion client\nNOTION_TOKEN env var"| DBS
 ```
 
 ---
