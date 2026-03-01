@@ -1,7 +1,7 @@
 # Project Status
 
-**Last updated:** 2026-02-28
-**Current phase:** Pre-development — planning complete
+**Last updated:** 2026-03-01
+**Current phase:** Phase 1 — in progress
 
 ---
 
@@ -10,7 +10,7 @@
 | Phase | Status | Description |
 |---|---|---|
 | Phase 0: Planning | ✅ Done | PLAN.md, docs/*, Notion schema defined |
-| Phase 1: Local MVP | ⏳ Not started | React + Hono + Notion API, localhost |
+| Phase 1: Local MVP | 🔄 In progress | React + Hono + Notion API, localhost |
 | Phase 2: CDN + Auth | ⏳ Not started | Vercel deploy, JWT auth |
 
 ---
@@ -18,51 +18,52 @@
 ## Phase 1 — Checklist
 
 ### Project Setup
-- [ ] `npm create vite@latest trading-journal -- --template react-ts`
-- [ ] Install dependencies: Tailwind, shadcn/ui, Hono, @notionhq/client, TanStack Query, Zustand, React Router, React Hook Form, Zod, Recharts, date-fns
-- [ ] Configure `vite.config.ts` (proxy `/api/*` → `localhost:3001`)
-- [ ] Create `server/` with Hono entry point
-- [ ] Create `.env` and `.env.example` with all Notion database IDs
+- [x] Vite + React + TypeScript scaffold
+- [x] Dependencies: Tailwind, shadcn/ui, Hono, @notionhq/client, TanStack Query, Zustand, React Router, React Hook Form, Zod, Recharts
+- [x] `vite.config.ts` proxy `/api/*` → `localhost:3001`
+- [x] `server/` with Hono entry point
+- [x] `.env` and `.env.example` with all Notion database IDs
 
 ### Notion: Prepare the Databases
-
-> Must be done directly on notion.so before starting development
-
-- [ ] Add to **Trades**: `SL`, `TP`, `ATR14`, `RR_Ratio`, `Leverage`, `RiskAmount`, `PreTradeNote`, `LessonLearned`, `Mistakes` (multi-select), `ChecklistScore`, `Screenshots` (files)
-- [ ] Add to **Journals**: `StartBalance`, `Currency`, `ChallengeType`, `ProfitTargetPct`, `MaxDailyLossPct`, `MaxOverallLossPct`, `MinTradingDays`
-- [ ] Add to **Instruments**: `ATR14`, `ATRUpdatedAt`
-- [ ] Create **Rules** database with Ezio's 10 default rules (see NOTION-SCHEMA.md)
+- [x] Add to **Trades**: `SL`, `TP`, `ATR14`, `RR_Ratio`, `Leverage`, `RiskAmount`, `PreTradeNote`, `LessonLearned`, `Mistakes`, `ChecklistScore`, `Screenshots`
+- [x] Add to **Journals**: `StartBalance`, `Currency`, `ChallengeType`, `ProfitTargetPct`, `MaxDailyLossPct`, `MaxOverallLossPct`, `MinTradingDays`
+- [x] Add to **Instruments**: `ATR14`, `ATRUpdatedAt`
+- [ ] Create **Rules** database with Ezio's 10 default rules
 - [ ] Create **DailyRoutines** database
 - [ ] Create **WeeklyReviews** database
-- [ ] Create a Notion integration and obtain `NOTION_TOKEN`
-- [ ] Copy the 6 database IDs into `.env`
-- [ ] Replace sample data: add real FTMO #7489666 account + US100 and XAUUSD instruments
+- [x] Notion integration token obtained
+- [x] All 6 database IDs in `.env`
+- [ ] Replace sample data: real FTMO #7489666 account + US100/XAUUSD instruments
 
 ### Backend (server/)
-- [ ] `server/notion/client.ts` — @notionhq/client setup
-- [ ] `server/notion/trades.ts` — listTrades, getTrade, createTrade, updateTrade
-- [ ] `server/notion/accounts.ts` — listAccounts, getAccount
-- [ ] `server/notion/instruments.ts` — listInstruments, getInstrument
-- [ ] `server/notion/rules.ts` — listRules
-- [ ] `server/notion/stats.ts` — dashboard metric aggregations
+- [x] `server/notion/client.ts`
+- [x] `server/notion/trades.ts` — listTrades, getTrade, createTrade, updateTrade
+- [x] `server/notion/accounts.ts` — listAccounts, getAccount
+- [x] `server/notion/instruments.ts` — listInstruments, getInstrument
+- [x] `server/notion/helpers.ts` — property mappers
+- [x] `server/routes/trades.ts`, accounts.ts, instruments.ts, rules.ts, stats.ts
+- [x] `server/routes/stats.ts` — dashboard metrics endpoint
 - [ ] `server/notion/files.ts` — screenshot upload via FileUpload API
-- [ ] Hono routes for all endpoints
 - [ ] Notion pagination handling (has_more + next_cursor)
 
 ### Frontend Core
-- [ ] App shell: layout with sidebar, header, React Router routing
-- [ ] TanStack Query hooks: `useTrades`, `useAccount`, `useInstruments`, `useStats`
-- [ ] `src/lib/calculations.ts`: `positionSize()`, `riskAmount()`, `riskPercent()`, `rrRatio()`
-- [ ] `src/lib/checklist.ts`: hardcoded generic + setup-specific rules
+- [x] App shell: sidebar + React Router routing
+- [x] `src/lib/calculations.ts`
+- [x] `src/lib/checklist.ts`
+- [x] `src/lib/schema.ts` — Zod schemas
+- [x] `src/lib/api.ts` — fetch wrappers
+- [x] `src/stores/uiStore.ts` — Zustand
+- [x] `src/hooks/useDashboard.ts`
+- [ ] `src/hooks/useTrades.ts`, useInstruments.ts
 
 ### Pages
-- [ ] **Dashboard** — equity curve, daily metrics, FTMO progress bars, last 5 trades
-- [ ] **Trade Log** — table + filters (date, instrument, direction, setup) + CSV export
-- [ ] **Log Trade** — 5-step wizard with mandatory pre-trade note and checklist
-- [ ] **Risk Calculator** — live calculation + "Register Trade" button → pre-fill wizard
-- [ ] **Analytics** — win rate, P&L by instrument, mistakes breakdown, R:R distribution
-- [ ] **Routine Tracker** — daily checklist, streak counter, weekly review
-- [ ] **Settings** — FTMO account, instruments (ATR), active rules
+- [x] **Dashboard** — equity curve, daily metrics, FTMO progress, recent trades
+- [x] **Risk Calculator** — live calculation + "Register Trade" → pre-fill wizard
+- [ ] **Trade Log** — table + filters + CSV export
+- [ ] **Log Trade** — 5-step wizard (pre-trade note + checklist mandatory)
+- [ ] **Analytics** — win rate, P&L by instrument, mistakes, R:R
+- [ ] **Routine Tracker** — daily checklist, streak, weekly review
+- [ ] **Settings** — account config, instruments, active rules
 
 ### Testing
 - [ ] Unit tests for `calculations.ts` with Vitest
