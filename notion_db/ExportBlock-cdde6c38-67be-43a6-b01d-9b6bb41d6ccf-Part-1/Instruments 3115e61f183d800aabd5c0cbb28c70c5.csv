@@ -1,0 +1,4 @@
+﻿Name,Symbol,Type,Leverage,MarketOpen,MarketClose,JournalId,Currency,Active,PipValue,ContractSize,TickSize
+Gold Futures2,XAUSD,commodity,20,18:00,17:00,3115e61f-183d-802d-98d1-f8d965c51846,USD,Yes,10,"100,000",0.0001
+EUR/USD,EURUSD,forex,100,00:00,23:55,3115e61f-183d-802d-98d1-f8d965c51846,,No,10,"100,000",0.0001
+pippo,pippo prova,forex,100,00:00,23:59,3115e61f-183d-802d-98d1-f8d965c51846,,No,10,"100,000",0.0001

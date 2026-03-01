@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(node:*)",
+      "Bash(pnpm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vite:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(curl:*)",
+      "Bash(pnpm dlx:*)",
+      "Bash(pnpm tsc:*)",
+      "Bash(pnpm build:*)"
+    ]
+  }
+}
