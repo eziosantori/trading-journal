@@ -70,26 +70,10 @@
 
 Strategy: cover pure business logic only. No DOM, no live Notion connection.
 
-- [ ] `src/lib/calculations.test.ts`
-  - `riskAmount` — base formula, edge case balance=0
-  - `riskPercent` — inverse of riskAmount, guard division by zero
-  - `positionSize` — size calculation, edge case slDistance=0, pipValue=0
-  - `rrRatio` — Long/Short, edge case risk=0
-  - `atrStopLoss` — Long and Short directions
-  - `tradePnL` — profitable and losing trades for both directions
-  - `isRiskWithinLimit` — default 2% limit and custom limit
-- [ ] `src/lib/checklist.test.ts`
-  - `getChecklist` — correct rule count for each setup type
-  - `getChecklist` — G12 included only when `isOfficeDay=true`
-  - `getChecklist` — correct setup-specific rules (spot check 1-2 per setup)
-- [ ] `src/lib/schema.test.ts`
-  - `CreateTradeSchema` — rejects empty `preTradeNote` (critical business rule)
-  - `CreateTradeSchema` — rejects `riskPercent > 10`
-  - `CreateTradeSchema` — rejects negative values for entry/sl/size
-  - `UpdateTradeSchema` — all fields optional, empty object is valid
-- [ ] `server/notion/helpers.test.ts`
-  - Notion property mappers → domain types (trade, account, instrument) with mock data
-  - Edge case: missing/null Notion properties → correct nullable domain values
+- [x] `src/lib/calculations.test.ts` — 22 tests (riskAmount, riskPercent, positionSize, rrRatio, atrStopLoss, tradePnL, isRiskWithinLimit)
+- [x] `src/lib/checklist.test.ts` — 7 tests (getChecklist: rule count, G12 conditional, no rule leaks)
+- [x] `src/lib/schema.test.ts` — 13 tests (CreateTradeSchema: required preTradeNote, riskPercent max, positive values; UpdateTradeSchema: all optional)
+- [x] `server/notion/helpers.test.ts` — 25 tests (num, select, multiSelect, richText, titleText, dateStart, relation, checkbox, toRichText + null/missing edge cases)
 
 ### Testing — E2E (Playwright)
 - [ ] Risk Calculator → Register Trade: pre-filled values in wizard
