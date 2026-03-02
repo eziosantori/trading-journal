@@ -263,9 +263,29 @@ AUTH_SECRET=xxxxxxx            # used to sign the JWT session cookie
 
 ## Testing
 
-- **Unit (Vitest):** functions in `calculations.ts` (position size, R:R, risk %) and Zod schemas
-- **E2E (Playwright):** complete "log trade" flow, risk calculator → register trade
-- Tests must run without a real Notion connection (mock the client)
+**Principle:** cover pure business logic. Do not chase coverage percentages.
+
+### Unit (Vitest) — what to test
+
+| File | Why |
+|---|---|
+| `src/lib/calculations.ts` | Risk management math — bugs here cost real money |
+| `src/lib/checklist.ts` | Hardcoded pre-trade rules — `getChecklist()` must return the right items |
+| `src/lib/schema.ts` | Data validation — `preTradeNote` required, `riskPercent ≤ 10`, positive values |
+| `server/notion/helpers.ts` | Notion → domain mappers — corrupt data here breaks the entire UI |
+
+**Do NOT test:** React components, TanStack Query hooks, config files, Zustand store.
+
+### E2E (Playwright) — critical flows
+
+- Risk Calculator → "Register Trade" → wizard pre-filled with calculated values
+- Dashboard: FTMO metrics load correctly with mock server
+
+### Rules
+
+- Unit tests must not touch the network or Notion (mock the client)
+- Test file lives next to the source: `calculations.ts` → `calculations.test.ts`
+- A failing test in `calculations.ts` blocks the merge
 
 ---
 
@@ -308,9 +328,12 @@ AUTH_SECRET=xxxxxxx            # used to sign the JWT session cookie
 - [ ] Settings
 
 **Testing**
-- [ ] Unit: `calculations.ts`
-- [ ] Unit: Zod schemas
-- [ ] E2E: log trade flow
+- [ ] Unit: `calculations.ts` — all functions with edge cases
+- [ ] Unit: `checklist.ts` — getChecklist(), conditional G12 rule
+- [ ] Unit: `schema.ts` — CreateTradeSchema (preTradeNote required, riskPercent max)
+- [ ] Unit: `server/notion/helpers.ts` — Notion → domain mappers with mock data
+- [ ] E2E: Risk Calculator → Register Trade (wizard pre-filled)
+- [ ] E2E: Dashboard FTMO metrics load
 
 ---
 
@@ -339,5 +362,5 @@ AUTH_SECRET=xxxxxxx            # used to sign the JWT session cookie
 
 ---
 
-*Created: 2026-02-21 | Updated: 2026-02-28*
+*Created: 2026-02-21 | Updated: 2026-03-02*
 *For: Ezio — FTMO Challenge*

@@ -1,6 +1,6 @@
 # Project Status
 
-**Last updated:** 2026-03-01
+**Last updated:** 2026-03-02
 **Current phase:** Phase 1 — in progress
 
 ---
@@ -54,22 +54,46 @@
 - [x] `src/lib/api.ts` — fetch wrappers
 - [x] `src/stores/uiStore.ts` — Zustand
 - [x] `src/hooks/useDashboard.ts`
-- [ ] `src/hooks/useTrades.ts`, useInstruments.ts
+- [x] `src/hooks/useTrades.ts`
+- [ ] `src/hooks/useInstruments.ts`
 
 ### Pages
 - [x] **Dashboard** — equity curve, daily metrics, FTMO progress, recent trades
 - [x] **Risk Calculator** — live calculation + "Register Trade" → pre-fill wizard
-- [ ] **Trade Log** — table + filters + CSV export
+- [x] **Trade Log** — table + filters + CSV export
 - [ ] **Log Trade** — 5-step wizard (pre-trade note + checklist mandatory)
 - [ ] **Analytics** — win rate, P&L by instrument, mistakes, R:R
 - [ ] **Routine Tracker** — daily checklist, streak, weekly review
 - [ ] **Settings** — account config, instruments, active rules
 
-### Testing
-- [ ] Unit tests for `calculations.ts` with Vitest
-- [ ] Unit tests for Zod schemas
-- [ ] E2E: Risk Calculator → Register Trade full flow
-- [ ] E2E: Dashboard loads with data
+### Testing — Unit (Vitest)
+
+Strategy: cover pure business logic only. No DOM, no live Notion connection.
+
+- [ ] `src/lib/calculations.test.ts`
+  - `riskAmount` — base formula, edge case balance=0
+  - `riskPercent` — inverse of riskAmount, guard division by zero
+  - `positionSize` — size calculation, edge case slDistance=0, pipValue=0
+  - `rrRatio` — Long/Short, edge case risk=0
+  - `atrStopLoss` — Long and Short directions
+  - `tradePnL` — profitable and losing trades for both directions
+  - `isRiskWithinLimit` — default 2% limit and custom limit
+- [ ] `src/lib/checklist.test.ts`
+  - `getChecklist` — correct rule count for each setup type
+  - `getChecklist` — G12 included only when `isOfficeDay=true`
+  - `getChecklist` — correct setup-specific rules (spot check 1-2 per setup)
+- [ ] `src/lib/schema.test.ts`
+  - `CreateTradeSchema` — rejects empty `preTradeNote` (critical business rule)
+  - `CreateTradeSchema` — rejects `riskPercent > 10`
+  - `CreateTradeSchema` — rejects negative values for entry/sl/size
+  - `UpdateTradeSchema` — all fields optional, empty object is valid
+- [ ] `server/notion/helpers.test.ts`
+  - Notion property mappers → domain types (trade, account, instrument) with mock data
+  - Edge case: missing/null Notion properties → correct nullable domain values
+
+### Testing — E2E (Playwright)
+- [ ] Risk Calculator → Register Trade: pre-filled values in wizard
+- [ ] Dashboard: FTMO metrics load with mock server data
 
 ---
 
