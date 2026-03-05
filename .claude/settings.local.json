@@ -10,7 +10,11 @@
       "Bash(curl:*)",
       "Bash(pnpm dlx:*)",
       "Bash(pnpm tsc:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(git push:*)",
+      "Bash(npx vitest:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

@@ -1,7 +1,7 @@
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import { notion, DB } from './client'
 import { num, select, statusProp, multiSelect, richText, titleText, dateStart, relation, toRichText } from './helpers'
-import type { Trade, CreateTrade, UpdateTrade, SetupType, Timeframe, Emotion, Mistake, TradeStatus, TradeDirection } from '../../src/lib/schema'
+import type { Trade, CreateTrade, UpdateTrade, CloseTradeRequest, PartialClose, SetupType, Timeframe, Emotion, Mistake, TradeStatus, TradeDirection } from '../../src/lib/schema'
 
 // --- Mapper: Notion page → Trade ---
 
@@ -37,6 +37,17 @@ function mapPage(page: PageObjectResponse): Trade {
     closeDate: dateStart(p, 'CloseDate'),
     accountId: relation(p, 'JournalId'),
     instrumentId: relation(p, 'InstrumentId'),
+    partialCloses: parsePartialCloses(richText(p, 'PartialCloses')),
+  }
+}
+
+function parsePartialCloses(raw: string | null): PartialClose[] {
+  if (!raw) return []
+  try {
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
   }
 }
 
@@ -132,6 +143,25 @@ export async function updateTrade(id: string, data: UpdateTrade): Promise<Trade>
   if (data.mistakes)
     properties['Mistakes'] = { multi_select: data.mistakes.map((m) => ({ name: m })) }
   if (data.notes) properties['Notes'] = { rich_text: toRichText(data.notes) }
+
+  const page = (await notion.pages.update({ page_id: id, properties })) as PageObjectResponse
+  return mapPage(page)
+}
+
+export async function closeTrade(id: string, data: CloseTradeRequest): Promise<Trade> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const properties: Record<string, any> = {
+    PartialCloses: { rich_text: toRichText(JSON.stringify(data.partialCloses)) },
+  }
+
+  if (data.isFinalClose) {
+    properties['Status'] = { status: { name: 'Closed' } }
+    properties['PnL'] = { number: data.pnl }
+    properties['ExitPrice'] = { number: data.exitPrice }
+    properties['CloseDate'] = { date: { start: new Date().toISOString() } }
+  } else {
+    properties['Status'] = { status: { name: 'Partial' } }
+  }
 
   const page = (await notion.pages.update({ page_id: id, properties })) as PageObjectResponse
   return mapPage(page)

@@ -2,7 +2,7 @@
  * HTTP client for the /api/* backend.
  * All functions return typed responses validated by the caller.
  */
-import type { Trade, Account, Instrument, CreateTrade, UpdateTrade } from './schema'
+import type { Trade, Account, Instrument, CreateTrade, UpdateTrade, CloseTradeRequest } from './schema'
 
 const BASE = '/api'
 
@@ -45,6 +45,10 @@ export function createTrade(data: CreateTrade) {
 
 export function updateTrade(id: string, data: UpdateTrade) {
   return request<Trade>(`/trades/${id}`, { method: 'PATCH', body: JSON.stringify(data) })
+}
+
+export function closeTrade(id: string, data: CloseTradeRequest) {
+  return request<Trade>(`/trades/${id}/close`, { method: 'POST', body: JSON.stringify(data) })
 }
 
 // --- Accounts ---

@@ -39,6 +39,17 @@ export const MistakeSchema = z.enum([
   'Ignored Warnings',
 ])
 
+// --- Partial Close ---
+
+export const PartialCloseSchema = z.object({
+  date: z.string(),
+  size: z.number(),
+  exitPrice: z.number(),
+  pnl: z.number(),
+})
+
+export type PartialClose = z.infer<typeof PartialCloseSchema>
+
 // --- Trade ---
 
 export const TradeSchema = z.object({
@@ -71,6 +82,7 @@ export const TradeSchema = z.object({
   closeDate: z.string().nullable(),
   accountId: z.string().nullable(),
   instrumentId: z.string().nullable(),
+  partialCloses: z.array(PartialCloseSchema).default([]),
 })
 
 export const CreateTradeSchema = z.object({
@@ -100,6 +112,17 @@ export const CreateTradeSchema = z.object({
   accountId: z.string(),
   instrumentId: z.string(),
 })
+
+/** Schema for partially or fully closing a trade. P&L is pre-calculated client-side. */
+export const CloseTradeSchema = z.object({
+  exitPrice: z.number().positive(),
+  size: z.number().positive(),
+  pnl: z.number(),          // this close's P&L (or total if isFinalClose)
+  isFinalClose: z.boolean(),
+  partialCloses: z.array(PartialCloseSchema), // full updated array incl. this close
+})
+
+export type CloseTradeRequest = z.infer<typeof CloseTradeSchema>
 
 /** Schema for closing or updating an existing trade. */
 export const UpdateTradeSchema = z.object({

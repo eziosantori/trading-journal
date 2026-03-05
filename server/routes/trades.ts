@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
-import { listTrades, getTrade, createTrade, updateTrade } from '../notion/trades'
-import type { UpdateTrade } from '../../src/lib/schema'
+import { listTrades, getTrade, createTrade, updateTrade, closeTrade } from '../notion/trades'
+import type { UpdateTrade, CloseTradeRequest } from '../../src/lib/schema'
 
 const trades = new Hono()
 
@@ -24,6 +24,12 @@ trades.post('/', async (c) => {
 trades.patch('/:id', async (c) => {
   const body = await c.req.json() as UpdateTrade
   const trade = await updateTrade(c.req.param('id'), body)
+  return c.json(trade)
+})
+
+trades.post('/:id/close', async (c) => {
+  const body = await c.req.json() as CloseTradeRequest
+  const trade = await closeTrade(c.req.param('id'), body)
   return c.json(trade)
 })
 
