@@ -16,6 +16,7 @@ import type {
   Account,
   Instrument,
 } from '@/lib/schema'
+import { InstrumentCombobox } from '@/components/InstrumentCombobox'
 import { cn } from '@/lib/utils'
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -206,18 +207,11 @@ function StepInstrumentSetup({
 
       <div>
         <label className={labelCls}>Strumento *</label>
-        <select
+        <InstrumentCombobox
+          instruments={instruments}
           value={data.instrumentId}
-          onChange={(e) => onChange('instrumentId', e.target.value)}
-          className={inputCls}
-        >
-          <option value="">Seleziona strumento...</option>
-          {instruments.map((i) => (
-            <option key={i.id} value={i.id}>
-              {i.symbol} — {i.name}
-            </option>
-          ))}
-        </select>
+          onChange={(id) => onChange('instrumentId', id)}
+        />
       </div>
 
       <div>
