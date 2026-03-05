@@ -102,7 +102,7 @@ Strategy: cover pure business logic only. No DOM, no live Notion connection.
 | Topic | Status | Notes |
 |---|---|---|
 | Phase 2 auth library | ✅ Decided | Google OAuth via `@hono/oauth-providers` + JWT session cookie |
-| Partial closes structure | 🔵 TBD | JSON in Rich Text or separate database? |
+| Partial closes structure | ✅ Decided | Option A: JSON array in `PartialCloses` Rich Text field. UI calculates PnL per partial and total at final close. Modal in Trade Log row. |
 | Real FTMO data | ⚠️ Pending | Delete sample data (AAPL, EUR/USD, TSLA, Fidelity, etc.) and enter real account + instruments |
 | Notion database naming | ⚠️ Verify | "Journals" → rename to "Accounts" for clarity? |
 | Finviz Reports | 🔵 Future | Not included in Phase 1 or 2 |

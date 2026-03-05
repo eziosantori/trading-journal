@@ -139,6 +139,11 @@ trading-journal/
 - Full trade history table, sortable and filterable (date, instrument, direction, setup)
 - Export to CSV
 - Click row → detail view + edit "Lesson Learned"
+- **Partial close modal** on Open/Partial rows: insert exit price + size → UI calculates P&L live
+  - Button label: "Chiudi parzialmente" if size < remaining, "Chiudi trade" if size = remaining
+  - On final close: UI sums all partial P&Ls → writes total `pnl`, `status: Closed`, `closeDate`
+  - Partial closes stored as JSON in `PartialCloses` Rich Text field (Option A, decided)
+  - Expanded row shows timeline of partial closes with date, size, exit price, P&L per close
 
 ### 3. Log Trade — 5-Step Wizard
 1. Instrument + Direction
