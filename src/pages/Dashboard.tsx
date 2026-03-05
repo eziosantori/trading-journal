@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import { RefreshCw, AlertTriangle } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { RefreshCw, AlertTriangle, PlusCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { MetricCard } from '@/components/dashboard/MetricCard'
 import { FTMOProgress } from '@/components/dashboard/FTMOProgress'
@@ -38,6 +39,12 @@ export default function Dashboard() {
           )}
         </div>
         <div className="flex items-center gap-2">
+          <Button asChild size="sm">
+            <Link to="/log-trade">
+              <PlusCircle size={14} className="mr-1.5" />
+              Log Trade
+            </Link>
+          </Button>
           {/* Account selector */}
           {accounts && accounts.length > 1 && (
             <select
@@ -137,7 +144,7 @@ export default function Dashboard() {
           }
           sub={
             activeAccount?.startBalance
-              ? `Started at $${activeAccount.startBalance.toLocaleString()}`
+              ? `Started at $${activeAccount.startBalance.toLocaleString('en-US')}`
               : undefined
           }
         />

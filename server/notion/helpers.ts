@@ -19,6 +19,13 @@ export function select(props: Props, key: string): string | null {
   return p.select?.name ?? null
 }
 
+/** Reads a Notion "Status" type property (distinct from "Select"). */
+export function statusProp(props: Props, key: string): string | null {
+  const p = props[key]
+  if (!p || p.type !== 'status') return null
+  return p.status?.name ?? null
+}
+
 export function multiSelect(props: Props, key: string): string[] {
   const p = props[key]
   if (!p || p.type !== 'multi_select') return []

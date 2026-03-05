@@ -40,6 +40,8 @@ The databases `Trades`, `Journals` (Accounts), and `Instruments` already exist (
 | `Mistakes` | Multi-select | ⚠️ See values below |
 | `ChecklistScore` | Number | ⚠️ Number of checklist items completed |
 | `Screenshots` | Files & Media | ⚠️ Trade screenshots (max 5 MB on Free plan) |
+| `Timeframe` | Select | ⚠️ Operational timeframe — see values below (default `1h`) |
+| `Spread` | Number | ⚠️ Spread at time of opening (in price units) |
 
 ### Select Values
 
@@ -71,6 +73,9 @@ The databases `Trades`, `Journals` (Accounts), and `Instruments` already exist (
 - `Closed Too Early`
 - `Excessive Risk`
 - `Ignored Warnings`
+
+**Timeframe:**
+- `M5`, `M15`, `M30`, `1h`, `4h`, `D`, `W`
 
 **Tags (from existing sample data):**
 - `High Priority`

@@ -362,5 +362,44 @@ AUTH_SECRET=xxxxxxx            # used to sign the JWT session cookie
 
 ---
 
-*Created: 2026-02-21 | Updated: 2026-03-02*
+---
+
+## Future Enhancements (post-Phase 1)
+
+### Checklist: Setup Grade (A+, A, B, C, D)
+
+Instead of a raw score (0–100%), assign a letter grade based on the percentage of checklist items checked. Proposed thresholds:
+
+| Grade | Score | Meaning |
+|---|---|---|
+| A+ | 100% | Perfect setup — all conditions met |
+| A  | 85–99% | Excellent — minor gaps |
+| B  | 70–84% | Good — proceed with awareness |
+| C  | 50–69% | Marginal — consider skipping |
+| D  | < 50% | Poor — do not trade |
+
+**Implementation notes:**
+- Add a `gradeChecklist(score: number): string` pure function in `src/lib/checklist.ts`
+- Display the grade badge next to the score in step 5 of the wizard
+- Store only `checklistScore` (number) in Notion; grade is always derived at render time
+- Show grade in Trade Log and Analytics (color-coded: A+/A = emerald, B = amber, C/D = red)
+
+### Checklist in Risk Calculator (optional)
+
+Add an expandable checklist panel to the Risk Calculator page. Rationale: the user can verify setup quality *before* committing to position sizing, not just at the end of the wizard.
+
+**Behavior:**
+- Collapsed by default (doesn't clutter the calculator)
+- Requires Setup Type selection to activate
+- Score/grade shown in the panel header once items are checked
+- Checked state passed via `location.state` to the LogTrade wizard (step 5 pre-populated) — avoids re-doing the checklist in the wizard if already completed in the calculator
+
+**Implementation notes:**
+- Extract checklist UI from step 5 into a reusable `<ChecklistPanel setupType={...} />` component
+- Wire into RiskCalculator with a `showChecklist` toggle state
+- Add `checkedItems?: string[]` and `isOfficeDay?: boolean` to the prefill object passed to LogTrade
+
+---
+
+*Created: 2026-02-21 | Updated: 2026-03-05*
 *For: Ezio — FTMO Challenge*

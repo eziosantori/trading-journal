@@ -1,6 +1,6 @@
 # Project Status
 
-**Last updated:** 2026-03-02
+**Last updated:** 2026-03-05
 **Current phase:** Phase 1 — in progress
 
 ---
@@ -55,13 +55,13 @@
 - [x] `src/stores/uiStore.ts` — Zustand
 - [x] `src/hooks/useDashboard.ts`
 - [x] `src/hooks/useTrades.ts`
-- [ ] `src/hooks/useInstruments.ts`
+- [x] `src/hooks/useInstruments.ts`
 
 ### Pages
 - [x] **Dashboard** — equity curve, daily metrics, FTMO progress, recent trades
 - [x] **Risk Calculator** — live calculation + "Register Trade" → pre-fill wizard
 - [x] **Trade Log** — table + filters + CSV export
-- [ ] **Log Trade** — 5-step wizard (pre-trade note + checklist mandatory)
+- [x] **Log Trade** — 5-step wizard (pre-trade note + checklist mandatory)
 - [ ] **Analytics** — win rate, P&L by instrument, mistakes, R:R
 - [ ] **Routine Tracker** — daily checklist, streak, weekly review
 - [ ] **Settings** — account config, instruments, active rules

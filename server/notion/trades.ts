@@ -1,7 +1,7 @@
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import { notion, DB } from './client'
-import { num, select, multiSelect, richText, titleText, dateStart, relation, toRichText } from './helpers'
-import type { Trade, CreateTrade, UpdateTrade, SetupType, Emotion, Mistake, TradeStatus, TradeDirection } from '../../src/lib/schema'
+import { num, select, statusProp, multiSelect, richText, titleText, dateStart, relation, toRichText } from './helpers'
+import type { Trade, CreateTrade, UpdateTrade, SetupType, Timeframe, Emotion, Mistake, TradeStatus, TradeDirection } from '../../src/lib/schema'
 
 // --- Mapper: Notion page → Trade ---
 
@@ -22,8 +22,10 @@ function mapPage(page: PageObjectResponse): Trade {
     rrRatio: num(p, 'RR_Ratio'),
     leverage: num(p, 'Leverage'),
     atr14: num(p, 'ATR14'),
-    status: (select(p, 'Status') ?? 'Open') as TradeStatus,
+    spread: num(p, 'Spread'),
+    status: (statusProp(p, 'Status') ?? 'Open') as TradeStatus,
     setupType: select(p, 'Strategy') as SetupType | null,
+    timeframe: (select(p, 'Timeframe') ?? '1h') as Timeframe,
     emotion: select(p, 'Sentiment') as Emotion | null,
     mistakes: multiSelect(p, 'Mistakes') as Mistake[],
     preTradeNote: richText(p, 'PreTradeNote'),
@@ -84,12 +86,13 @@ export async function createTrade(data: CreateTrade): Promise<Trade> {
     Direction: { select: { name: data.direction } },
     EntryPrice: { number: data.entryPrice },
     Size: { number: data.size },
-    Status: { select: { name: data.status ?? 'Open' } },
+    Status: { status: { name: data.status ?? 'Open' } },
     OpenDate: { date: { start: data.openDate } },
     RiskPercent: { number: data.riskPercent },
     RiskAmount: { number: data.riskAmount },
     PreTradeNote: { rich_text: toRichText(data.preTradeNote) },
     Strategy: { select: { name: data.setupType } },
+    Timeframe: { select: { name: data.timeframe ?? '1h' } },
     JournalId: { relation: [{ id: data.accountId }] },
     InstrumentId: { relation: [{ id: data.instrumentId }] },
   }
@@ -99,6 +102,7 @@ export async function createTrade(data: CreateTrade): Promise<Trade> {
   if (data.rrRatio != null) properties['RR_Ratio'] = { number: data.rrRatio }
   if (data.leverage != null) properties['Leverage'] = { number: data.leverage }
   if (data.atr14 != null) properties['ATR14'] = { number: data.atr14 }
+  if (data.spread != null) properties['Spread'] = { number: data.spread }
   if (data.emotion) properties['Sentiment'] = { select: { name: data.emotion } }
   if (data.mistakes?.length)
     properties['Mistakes'] = { multi_select: data.mistakes.map((m) => ({ name: m })) }
@@ -121,7 +125,7 @@ export async function updateTrade(id: string, data: UpdateTrade): Promise<Trade>
 
   if (data.exitPrice != null) properties['ExitPrice'] = { number: data.exitPrice }
   if (data.pnl != null) properties['PnL'] = { number: data.pnl }
-  if (data.status) properties['Status'] = { select: { name: data.status } }
+  if (data.status) properties['Status'] = { status: { name: data.status } }
   if (data.closeDate) properties['CloseDate'] = { date: { start: data.closeDate } }
   if (data.lessonLearned != null)
     properties['LessonLearned'] = { rich_text: toRichText(data.lessonLearned) }

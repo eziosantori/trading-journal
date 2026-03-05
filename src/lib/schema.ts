@@ -5,6 +5,8 @@ import { z } from 'zod'
 export const TradeDirectionSchema = z.enum(['Long', 'Short'])
 export const TradeStatusSchema = z.enum(['Open', 'Closed', 'Partial'])
 
+export const TimeframeSchema = z.enum(['M5', 'M15', 'M30', '1h', '4h', 'D', 'W'])
+
 export const SetupTypeSchema = z.enum([
   'Trend Following',
   'Pullback to S/R',
@@ -54,8 +56,10 @@ export const TradeSchema = z.object({
   rrRatio: z.number().nullable(),
   leverage: z.number().nullable(),
   atr14: z.number().nullable(),
+  spread: z.number().nullable(),
   status: TradeStatusSchema,
   setupType: SetupTypeSchema.nullable(),
+  timeframe: TimeframeSchema.nullable(),
   emotion: EmotionSchema.nullable(),
   mistakes: z.array(MistakeSchema),
   preTradeNote: z.string().nullable(),
@@ -80,8 +84,10 @@ export const CreateTradeSchema = z.object({
   rrRatio: z.number().optional(),
   leverage: z.number().optional(),
   atr14: z.number().optional(),
+  spread: z.number().optional(),
   status: TradeStatusSchema.default('Open'),
   setupType: SetupTypeSchema,
+  timeframe: TimeframeSchema.default('1h'),
   emotion: EmotionSchema.optional(),
   mistakes: z.array(MistakeSchema).default([]),
   preTradeNote: z.string().min(1, 'Pre-trade note is required'),
@@ -158,3 +164,4 @@ export type TradeStatus = z.infer<typeof TradeStatusSchema>
 export type SetupType = z.infer<typeof SetupTypeSchema>
 export type Emotion = z.infer<typeof EmotionSchema>
 export type Mistake = z.infer<typeof MistakeSchema>
+export type Timeframe = z.infer<typeof TimeframeSchema>
