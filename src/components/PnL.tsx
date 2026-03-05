@@ -1,12 +1,5 @@
-import { cn } from '@/lib/utils'
-
-function formatCurrency(value: number, currency = 'USD') {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
-  }).format(value)
-}
+import { cn, formatCurrency } from '@/lib/utils'
+import { useLocale } from '@/stores/uiStore'
 
 interface PnLProps {
   value: number
@@ -16,6 +9,7 @@ interface PnLProps {
 }
 
 export function PnL({ value, currency = 'USD', className, showSign = true }: PnLProps) {
+  const locale = useLocale()
   const positive = value >= 0
   return (
     <span
@@ -26,7 +20,7 @@ export function PnL({ value, currency = 'USD', className, showSign = true }: PnL
       )}
     >
       {showSign && positive && value !== 0 ? '+' : ''}
-      {formatCurrency(value, currency)}
+      {formatCurrency(value, currency, locale)}
     </span>
   )
 }

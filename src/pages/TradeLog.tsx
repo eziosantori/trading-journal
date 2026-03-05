@@ -22,10 +22,10 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { PnL } from '@/components/PnL'
 import { useTrades } from '@/hooks/useTrades'
 import { useInstruments } from '@/hooks/useInstruments'
-import { useUIStore } from '@/stores/uiStore'
+import { useUIStore, useLocale } from '@/stores/uiStore'
 import { closeTrade } from '@/lib/api'
 import { tradePnL } from '@/lib/calculations'
-import { cn } from '@/lib/utils'
+import { cn, formatDate, formatDateTime, formatCurrency } from '@/lib/utils'
 import type { Trade, PartialClose, CloseTradeRequest } from '@/lib/schema'
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -53,24 +53,6 @@ const DIRECTION_STYLES: Record<string, string> = {
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
-
-function formatDate(dateStr: string | null) {
-  if (!dateStr) return '—'
-  return new Date(dateStr).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: '2-digit',
-  })
-}
-
-function formatDateTime(dateStr: string) {
-  return new Date(dateStr).toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
 
 function remainingSize(trade: Trade): number {
   const closed = trade.partialCloses.reduce((s, p) => s + p.size, 0)
@@ -282,6 +264,7 @@ function TradeRow({
   const [expanded, setExpanded] = useState(false)
   const [closeModalOpen, setCloseModalOpen] = useState(false)
   const canClose = trade.status === 'Open' || trade.status === 'Partial'
+  const locale = useLocale()
 
   return (
     <>
@@ -292,7 +275,7 @@ function TradeRow({
         {/* Trade name + date */}
         <div className="flex flex-col min-w-0">
           <span className="font-medium truncate">{trade.name}</span>
-          <span className="text-xs text-muted-foreground">{formatDate(trade.openDate)}</span>
+          <span className="text-xs text-muted-foreground">{formatDate(trade.openDate, locale)}</span>
         </div>
 
         <div className="self-center">
@@ -376,7 +359,7 @@ function TradeRow({
                     className="flex items-center gap-4 rounded-md bg-muted/30 px-3 py-1.5"
                   >
                     <span className="text-muted-foreground w-28 flex-shrink-0">
-                      {formatDateTime(pc.date)}
+                      {formatDateTime(pc.date, locale)}
                     </span>
                     <span className="font-mono">
                       {pc.size} lots @ {pc.exitPrice.toFixed(2)}
@@ -419,7 +402,7 @@ function TradeRow({
             {trade.checklistScore != null && <span>Checklist: <span className="font-mono text-foreground">{trade.checklistScore}%</span></span>}
             {trade.emotion && <span>Emotion: <span className="text-foreground">{trade.emotion}</span></span>}
             {trade.timeframe && <span>TF: <span className="font-mono text-foreground">{trade.timeframe}</span></span>}
-            {trade.closeDate && <span>Closed: <span className="text-foreground">{formatDate(trade.closeDate)}</span></span>}
+            {trade.closeDate && <span>Closed: <span className="text-foreground">{formatDate(trade.closeDate, locale)}</span></span>}
           </div>
         </div>
       )}

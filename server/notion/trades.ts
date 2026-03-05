@@ -1,6 +1,7 @@
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import { notion, DB } from './client'
 import { num, select, statusProp, multiSelect, richText, titleText, dateStart, relation, toRichText } from './helpers'
+import { getInstrument } from './instruments'
 import type { Trade, CreateTrade, UpdateTrade, CloseTradeRequest, PartialClose, SetupType, Timeframe, Emotion, Mistake, TradeStatus, TradeDirection } from '../../src/lib/schema'
 
 // --- Mapper: Notion page → Trade ---
@@ -88,8 +89,21 @@ export async function getTrade(id: string): Promise<Trade> {
   return mapPage(page)
 }
 
+function formatTradeName(symbol: string, openDate: string): string {
+  // openDate is ISO string e.g. "2026-03-05T10:30:00.000Z"
+  const d = new Date(openDate)
+  const yy = String(d.getUTCFullYear()).slice(-2)
+  const mm = String(d.getUTCMonth() + 1).padStart(2, '0')
+  const dd = String(d.getUTCDate()).padStart(2, '0')
+  const hh = String(d.getUTCHours()).padStart(2, '0')
+  const min = String(d.getUTCMinutes()).padStart(2, '0')
+  return `${symbol} ${yy}${mm}${dd}-${hh}${min}`
+}
+
 export async function createTrade(data: CreateTrade): Promise<Trade> {
-  const tradeName = `${data.instrumentId ?? 'Trade'}-${data.direction}-${data.openDate}`
+  const instrument = data.instrumentId ? await getInstrument(data.instrumentId).catch(() => null) : null
+  const symbol = instrument?.symbol || 'Trade'
+  const tradeName = formatTradeName(symbol, data.openDate)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const properties: Record<string, any> = {

@@ -181,6 +181,11 @@ Pre-filled fields: Instrument, Entry, SL, TP, Position Size, Risk %, R:R ratio.
 - Instrument management (ATR, leverage, market hours)
 - Active rules view
 - Data export/import
+- **Locale / Internazionalizzazione** *(bassa priorità)*
+  - Formato date, numeri e valuta: usa `navigator.language` (browser) come default tramite `Intl.NumberFormat`/`toLocaleDateString` con `locale = undefined`
+  - Override locale salvato in Zustand (`localeOverride` in `uiStore.ts`) + persisted in localStorage
+  - In Settings: dropdown per forzare locale (es. `it-IT`, `en-US`, `de-DE`)
+  - In futuro: lingua UI (label, messaggi) via react-i18next o simile — **non implementare prima del completamento delle funzionalità core**
 
 ---
 

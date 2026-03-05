@@ -6,7 +6,7 @@ import { getChecklist } from '@/lib/checklist'
 import { riskAmount, positionSize, rrRatio, isRiskWithinLimit } from '@/lib/calculations'
 import { useAccounts } from '@/hooks/useDashboard'
 import { useInstruments } from '@/hooks/useInstruments'
-import { useUIStore } from '@/stores/uiStore'
+import { useUIStore, useLocale } from '@/stores/uiStore'
 import type {
   TradeDirection,
   SetupType,
@@ -17,7 +17,7 @@ import type {
   Instrument,
 } from '@/lib/schema'
 import { InstrumentCombobox } from '@/components/InstrumentCombobox'
-import { cn } from '@/lib/utils'
+import { cn, formatCurrency } from '@/lib/utils'
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -368,6 +368,7 @@ function StepPricesRisk({
   balance: number
   pipValue: number
 }) {
+  const locale = useLocale()
   const computed = computePriceFields(data, balance, pipValue)
   const isModeA = data.calcMode === 'sl-size'
 
@@ -402,7 +403,7 @@ function StepPricesRisk({
             ? 'Inserisci Entry, SL e Position Size — Risk% e $Risk vengono calcolati.'
             : 'Inserisci Risk% e prezzi — Position Size viene calcolata.'}
           {balance > 0 && (
-            <span className="ml-1 font-mono">Balance: ${balance.toLocaleString('en-US')}</span>
+            <span className="ml-1 font-mono">Balance: {formatCurrency(balance, 'USD', locale)}</span>
           )}
         </p>
       </div>

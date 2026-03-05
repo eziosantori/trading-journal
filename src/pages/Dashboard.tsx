@@ -8,10 +8,12 @@ import { EquityCurve } from '@/components/dashboard/EquityCurve'
 import { RecentTrades } from '@/components/dashboard/RecentTrades'
 import { PnL } from '@/components/PnL'
 import { useAccounts, useDashboardStats } from '@/hooks/useDashboard'
-import { useUIStore } from '@/stores/uiStore'
+import { useUIStore, useLocale } from '@/stores/uiStore'
+import { formatCurrency } from '@/lib/utils'
 
 export default function Dashboard() {
   const { activeAccountId, setActiveAccountId } = useUIStore()
+  const locale = useLocale()
   const { data: accounts, isLoading: loadingAccounts } = useAccounts()
   const { data: stats, isLoading: loadingStats, refetch, error } = useDashboardStats()
 
@@ -144,7 +146,7 @@ export default function Dashboard() {
           }
           sub={
             activeAccount?.startBalance
-              ? `Started at $${activeAccount.startBalance.toLocaleString('en-US')}`
+              ? `Started at ${formatCurrency(activeAccount.startBalance, activeAccount.currency ?? 'USD', locale)}`
               : undefined
           }
         />
