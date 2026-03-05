@@ -62,7 +62,7 @@
 - [x] **Risk Calculator** — live calculation + "Register Trade" → pre-fill wizard
 - [x] **Trade Log** — table + filters + CSV export
 - [x] **Log Trade** — 5-step wizard (pre-trade note + checklist mandatory)
-- [ ] **Analytics** — win rate, P&L by instrument, mistakes, R:R
+- [x] **Analytics** — win rate, P&L by instrument, mistakes, R:R
 - [ ] **Routine Tracker** — daily checklist, streak, weekly review
 - [ ] **Settings** — account config, instruments, active rules
 
